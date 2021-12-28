@@ -2,9 +2,9 @@
 
 ## Testando a aplicação
 ```
-git clone https://gitlab.com/rafaelperazzo/cc0050.git
+git clone https://github.com/Pedro-HenriqueFF/Lanhouse
 
-cd cc0050
+cd Lanhouse
 
 docker-compose up -d
 
