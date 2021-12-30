@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Nome</th>
+    <th>Disponível ?</th>
+</tr>
+{% for dispostivo in dispositivos %}
+    <tr>
+        <td>{{dispostivo.id}}</td>
+        <td>{{dispostivo.nome}}</td>
+        <td>{{dispostivo.disponivel}}</td>
+    </tr>
+{% endfor %}
+
+</table>
+
+{% endblock %}

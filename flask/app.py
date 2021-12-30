@@ -7,9 +7,9 @@ from flask_wtf.csrf import CSRFProtect
 import logging
 import os
 import datetime
-from cadastroM import cadastroM
-from usuarioForm import UsuarioForm
-from locaForm import LocarForm
+from formDispositivo import DispositivoForm
+from formUsuario import UsuarioForm
+from formLocacao import LocacaoForm
 from flask_session import Session
 from flask import session
 from formLogin import LoginForm
@@ -38,9 +38,9 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 from database import db
 db.init_app(app)
 
-from usuario import Usuario
-from maquinas import Maquina
-from locacao import Locacao
+from Usuarios import Usuario
+from Dispositivos import Dispositivo
+from Locacoes import Locacao
 
 @app.before_first_request
 def inicializar_bd():
@@ -53,24 +53,24 @@ def root():
         return (redirect(url_for('login')))
     return (render_template('index.html'))
         
-@app.route('/maquina/cadastrar',methods=['POST','GET'])
-def cadastrar_chave():
+@app.route('/dispositivo/cadastrar',methods=['POST','GET'])
+def cadastrar_dispositivo():
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
-    form = cadastroM()
+    form = DispositivoForm()
     if form.validate_on_submit():
         #PROCESSAMENTO DOS DADOS RECEBIDOS
-        novaMaquina = Maquina(nome=request.form['nome'])
-        db.session.add(novaMaquina)
+        novoDispositivo = Dispositivo(nome=request.form['nome'])
+        db.session.add(novoDispositivo)
         db.session.commit()
-        flash('Maquina cadastrada com sucesso!')
+        flash('Dispositivo cadastrado com sucesso!')
         return(redirect(url_for('root')))
     return (render_template('form.html',form=form,action=url_for('cadastrar_chave')))
 
-@app.route('/maquina/listar')
-def listar_chaves():
-    maquinas = Maquina.query.order_by(Maquina.nome).all()
-    return(render_template('maquinas.html',maquinas=maquinas))
+@app.route('/dispositivo/listar')
+def listar_dispositivos():
+    dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
+    return(render_template('dispositivos.html',dispositivos=dispositivos))
 
 @app.route('/usuario/listar')
 def listar_usuarios():
@@ -99,52 +99,51 @@ def cadastrar_usuario():
         return(redirect(url_for('root')))
     return (render_template('form.html',form=form,action=url_for('cadastrar_usuario')))
 
-@app.route('/maquina/locar',methods=['POST','GET'])
-def emprestar_chave():
+@app.route('/dispositivo/alugar',methods=['POST','GET'])
+def alugar_dispositivo():
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
-    form = LocarForm()
-    maquinas = Maquina.query.filter(Maquina.disponivel==True).order_by(Maquina.nome).all()
-    form.maquina.choices = [(c.id,c.nome) for c in maquinas]
+    form = LocacaoForm()
+    dispositivos = Dispositivo.query.filter(Dispositivo.disponivel==True).order_by(Dispositivo.nome).all()
+    form.dispositivo.choices = [(d.id,d.nome) for d in dispositivos]
     if form.validate_on_submit():
         #IMPLEMENTAÇÃO DO CADASTRO DO EMPRÉSTIMO
         nome = request.form['nome']
-        maquina = int(request.form['maquina'])
-        novoEmprestimo = Locacao(id_usuario=1,id_maquina=maquina,nome_pessoa=nome)
-        chaveAlterada = Maquina.query.get(maquina)
+        dispositivo = int(request.form['dispositivo'])
+        novaLocacao = Locacao(id_usuario=1,id_dispositivo=dispositivo,nome_pessoa=nome)
+        chaveAlterada = Dispositivo.query.get(dispositivo)
         chaveAlterada.disponivel = False
-        db.session.add(novoEmprestimo)
+        db.session.add(novaLocacao)
         db.session.commit()
         return(redirect(url_for('root')))
-    return(render_template('form.html',form=form,action=url_for('emprestar_chave')))
+    return(render_template('form.html',form=form,action=url_for('alugar_dispositivo')))
 
-@app.route('/maquina/listar_emprestimos')
-def listar_emprestimos():
-    locacoes = Locacao.query.order_by(Locacao.data_emprestimo.desc()).all()
-    return(render_template('emprestimos.html',locacoes=locacoes))
+@app.route('/dispositivo/listar_locacoes')
+def listar_locacoes():
+    locacoes = Locacao.query.order_by(Locacao.data_locacao.desc()).all()
+    return(render_template('locacoes.html',locacoes=locacoes))
 
-@app.route('/maquina/devolver/<id_emprestimo>',methods=['GET','POST'])
-def devolver_chave(id_emprestimo):
+@app.route('/dispositivo/encerrar/<id_locacao>',methods=['GET','POST'])
+def encerrar_sessao(id_locacao):
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
-    id_emprestimo = int(id_emprestimo)
-    emprestimo = Locacao.query.get(id_emprestimo)
-    emprestimo.data_devolucao = datetime.datetime.now()
-    maquina = Maquina.query.get(emprestimo.id_chave)
-    maquina.disponivel = True
+    id_locacao = int(id_locacao)
+    locacao = Locacao.query.get(id_locacao)
+    locacao.data_encerramento = datetime.datetime.now()
+    dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
+    dispositivo.disponivel = True
     db.session.commit()
     return (redirect(url_for('root')))
 
-@app.route('/emprestimo/remover/<id_emprestimo>',methods=['GET','POST'])
-def remover_emprestimo(id_emprestimo):
+@app.route('/dispositivo/remover/<id_locacao>',methods=['GET','POST'])
+def remover_locacao(id_locacao):
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
-    id_emprestimo = int(id_emprestimo)
-    emprestimo = Locacao.query.get(id_emprestimo)
-    id_chave = emprestimo.id_chave
-    maquina = Maquina.query.get(id_chave)
-    maquina.disponivel = True
-    db.session.delete(emprestimo)
+    id_locacao = int(id_locacao)
+    locacao = Locacao.query.get(id_locacao)
+    dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
+    dispositivo.disponivel = True
+    db.session.delete(locacao)
     db.session.commit()
     return (redirect(url_for('root')))
 

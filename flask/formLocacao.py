@@ -3,7 +3,8 @@ from wtforms import StringField, SubmitField,PasswordField,SelectField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired
 
-class EmprestimoForm(FlaskForm):
+class LocacaoForm(FlaskForm):
     nome = StringField('Nome de quem pega emprestado: ', validators=[DataRequired()])
-    maquina = SelectField('Maquina',coerce=int)
+    dispositivo = SelectField('Dispositivo',coerce=int)
+    #tempo_locacao
     enviar = SubmitField('CADASTRAR')
