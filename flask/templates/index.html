@@ -2,82 +2,28 @@
 
 {% block conteudo %}
 
-<div class="container">
-    <div class="row">
-      <div class="col">
-        <img src="{{url_for('static',filename='key.png')}}">
-      </div>
-      <div class="col">
-        {% if session['autenticado']==True %}
-            #ID: {{session['usuario']}}
-        {% else %}
-            <a href="{{url_for('login')}}">ENTRAR</a>
-        {% endif %}
-      </div>
-      <div class="col">
-        {% if session['autenticado']==True %}
-            <a href="{{url_for('logout')}}">SAIR</a>
-        {% endif %}
-      </div>
-      <div class="col">
-        <img src="{{url_for('static',filename='key.png')}}">
-      </div>
-    </div>
-</div>
+<p>
+  <a href="{{url_for('cadastrar_dispositivo')}}">CADASTRAR DISPOSITIVO</a>
+</p>
 
+<p>
+  <a href="{{url_for('listar_dispositivos')}}">LISTAR DISPOSITIVOS</a>
+</p>
 
-<div class="card-group">
-    <div class="card">
-      
-      <div class="card-body">
-        <h5 class="card-title">Cadastrar Chave</h5>
-        <p class="card-text">Função para cadastramento de novas chaves.</p>
-        <p class="card-text"><small class="text-muted"><a href="{{url_for('cadastrar_chave')}}">CADASTRAR</a></small></p>
-      </div>
-    </div>
-    <div class="card">
-      
-        <div class="card-body">
-            <h5 class="card-title">Listar chaves</h5>
-            <p class="card-text">Mostra todas as chaves cadastradas</p>
-            <p class="card-text"><small class="text-muted"><a href="{{url_for('listar_chaves')}}">LISTAR</a></small></p>
-          </div>
-    </div>
-    <div class="card">
-      
-        <div class="card-body">
-            <h5 class="card-title">Emprestar Chave</h5>
-            <p class="card-text">Função para empréstimo de chave para um usuário.</p>
-            <p class="card-text"><small class="text-muted"><a href="{{url_for('emprestar_chave')}}">CADASTRAR</a></small></p>
-          </div>
-    </div>
-  </div>
+<p>
+  <a href="{{url_for('cadastrar_usuario')}}">CADASTRAR USUÁRIO</a>
+</p>
 
-  <div class="card-group">
-    <div class="card">
-      
-      <div class="card-body">
-        <h5 class="card-title">Cadastrar Usuário</h5>
-        <p class="card-text">Função para cadastramento de novos usuários.</p>
-        <p class="card-text"><small class="text-muted"><a href="{{url_for('cadastrar_usuario')}}">CADASTRAR</a></small></p>
-      </div>
-    </div>
-    <div class="card">
-      
-        <div class="card-body">
-            <h5 class="card-title">Listar usuários</h5>
-            <p class="card-text">Mostra todos os usuários cadastrados</p>
-            <p class="card-text"><small class="text-muted"><a href="{{url_for('listar_usuarios')}}">LISTAR</a></small></p>
-          </div>
-    </div>
-    <div class="card">
-      
-        <div class="card-body">
-            <h5 class="card-title">Listar Empréstimos</h5>
-            <p class="card-text">Função para listar os empréstimos das chaves.</p>
-            <p class="card-text"><small class="text-muted"><a href="{{url_for('listar_emprestimos')}}">LISTAR</a></small></p>
-          </div>
-    </div>
-  </div>
+<p>
+  <a href="{{url_for('listar_usuarios')}}">LISTAR USUÁRIOS</a>
+</p>
+
+<p>
+  <a href="{{url_for('alugar_dispositivo')}}">ALUGAR DISPOSITIVO</a>
+</p>
+
+<p>
+  <a href="{{url_for('listar_locacoes')}}">LISTAR LOCAÇÕES</a>
+</p>
 
 {% endblock %}

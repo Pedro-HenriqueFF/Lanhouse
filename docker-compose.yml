@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   flask:
-    image: flask:cc0050
+    image: flask:Lanhouse
     build: .
     volumes:
       - ./flask:/flask

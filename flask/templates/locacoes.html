@@ -29,9 +29,9 @@
             {% if locacao.pago is True %}
                 <td>PAGO</td>
             {% endif %}
-            <td><a href="{{url_for('devolver_chave',id_emprestimo=emprestimo.id)}}">DEVOLVER</a></td>
-            <td><a href="{{url_for('devolver_chave',id_emprestimo=emprestimo.id)}}">DEVOLVER</a></td>
-            <td><a href="{{url_for('remover_emprestimo',id_emprestimo=emprestimo.id)}}">REMOVER</a></td>
+            <td>PAGAR</td>
+            <td><a href="{{url_for('encerrar_sessao',id_locacao=locacao.id)}}">ENCERRAR</a></td>
+            <td><a href="{{url_for('remover_locacao',id_locacao=locacao.id)}}">REMOVER</a></td>
         </tr>
     {% endfor %}
 

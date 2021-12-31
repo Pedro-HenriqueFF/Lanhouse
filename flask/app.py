@@ -65,19 +65,12 @@ def cadastrar_dispositivo():
         db.session.commit()
         flash('Dispositivo cadastrado com sucesso!')
         return(redirect(url_for('root')))
-    return (render_template('form.html',form=form,action=url_for('cadastrar_chave')))
+    return (render_template('form.html',form=form,action=url_for('cadastrar_dispositivo')))
 
 @app.route('/dispositivo/listar')
 def listar_dispositivos():
     dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
     return(render_template('dispositivos.html',dispositivos=dispositivos))
-
-@app.route('/usuario/listar')
-def listar_usuarios():
-    if session.get('autenticado',False)==False:
-        return (redirect(url_for('login')))
-    usuarios = Usuario.query.order_by(Usuario.nome).all()
-    return(render_template('usuarios.html',usuarios=usuarios))
 
 @app.route('/usuario/cadastrar',methods=['POST','GET'])
 def cadastrar_usuario():
@@ -98,6 +91,13 @@ def cadastrar_usuario():
         flash(u'Usuário cadastrado com sucesso!')
         return(redirect(url_for('root')))
     return (render_template('form.html',form=form,action=url_for('cadastrar_usuario')))
+
+@app.route('/usuario/listar')
+def listar_usuarios():
+    if session.get('autenticado',False)==False:
+        return (redirect(url_for('login')))
+    usuarios = Usuario.query.order_by(Usuario.nome).all()
+    return(render_template('usuarios.html',usuarios=usuarios))
 
 @app.route('/dispositivo/alugar',methods=['POST','GET'])
 def alugar_dispositivo():
@@ -190,37 +190,36 @@ def logout():
 rotas com JSON
 '''
 
-@app.route('/chave/listar/json')
-def listar_chaves_json():
-    chaves = Chave.query.order_by(Chave.nome).all()
-    resultado = json.dumps([ row.asdict() for row in chaves ])
+@app.route('/dispositivo/listar/json')
+def listar_dispositivos_json():
+    dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
+    resultado = json.dumps([ row.asdict() for row in dispositivos ])
     return(resultado)
 
-@app.route('/chave/situacao/<nome>')
-def chave_situacao(nome):
-    chave = Chave.query.filter(Chave.nome==nome).first()
-    if chave is not None:
-        if chave.disponivel:
+@app.route('/dispositivo/situacao/<nome>')
+def dispositivo_situacao(nome):
+    dispositivo = Dispositivo.query.filter(Dispositivo.nome==nome).first()
+    if dispositivo is not None:
+        if dispositivo.disponivel:
             resultado = json_response(situacao="DISPONIVEL")
         else:
             #Procurar pra quem está emprestada
-            emprestimo = Emprestimo.query.filter(Emprestimo.id_chave==chave.id).order_by(Emprestimo.id.desc()).first()
+            locacao = Locacao.query.filter(Locacao.id_dispositivo==dispositivo.id).order_by(Locacao.id.desc()).first()
             #"Montar" a resposta
-            resultado = json_response(situacao="EMPRESTADA",nome=emprestimo.nome_pessoa)
+            resultado = json_response(situacao="ALUGADA",nome=locacao.nome_pessoa)
     else:
-        resultado = json_response(situacao="CHAVE INEXISTENTE")
+        resultado = json_response(situacao="DISPOSITIVO INEXISTENTE")
 
     return(resultado)
 
-@app.route('/chave/teste')
-def chave_teste():
-    #return(json_response(aplicacao="Flask",versao="2.0",data="28/09/2021"))
-    chaves = Chave.query.order_by(Chave.nome).all()
-    lista_chaves = []
-    for chave in chaves:
-        linha = {"nome": chave.nome, "disponivel": chave.disponivel}
-        lista_chaves.append(linha)
-    resultado = json.dumps([linha for linha in lista_chaves])
+@app.route('/dispositivo/teste')
+def dispositivo_teste():
+    dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
+    lista_dispositivos = []
+    for dispositivo in dispositivos:
+        linha = {"nome": dispositivo.nome, "disponivel": dispositivo.disponivel}
+        lista_dispositivos.append(linha)
+    resultado = json.dumps([linha for linha in lista_dispositivos])
     return(resultado)
 
 if __name__ == "__main__":
