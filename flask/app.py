@@ -110,9 +110,9 @@ def alugar_dispositivo():
         #IMPLEMENTAÇÃO DO CADASTRO DO EMPRÉSTIMO
         nome = request.form['nome']
         dispositivo = int(request.form['dispositivo'])
-        novaLocacao = Locacao(id_usuario=1,id_dispositivo=dispositivo,nome_pessoa=nome)
-        chaveAlterada = Dispositivo.query.get(dispositivo)
-        chaveAlterada.disponivel = False
+        novaLocacao = Locacao(id_usuario=session['usuario'],id_dispositivo=dispositivo,nome_pessoa=nome,data_locacao=datetime.datetime.now())
+        dispositivoAlterado = Dispositivo.query.get(dispositivo)
+        dispositivoAlterado.disponivel = False
         db.session.add(novaLocacao)
         db.session.commit()
         return(redirect(url_for('root')))
@@ -123,8 +123,18 @@ def listar_locacoes():
     locacoes = Locacao.query.order_by(Locacao.data_locacao.desc()).all()
     return(render_template('locacoes.html',locacoes=locacoes))
 
+@app.route('/dispositivo/pagar/<id_locacao>',methods=['GET','POST'])
+def pagar_locacao(id_locacao):
+    if session.get('autenticado',False)==False:
+        return (redirect(url_for('login')))
+    id_locacao = int(id_locacao)
+    locacao = Locacao.query.get(id_locacao)
+    locacao.pago = True
+    db.session.commit()
+    return (redirect(url_for('listar_locacoes')))
+
 @app.route('/dispositivo/encerrar/<id_locacao>',methods=['GET','POST'])
-def encerrar_sessao(id_locacao):
+def encerrar_locacao(id_locacao):
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
@@ -133,7 +143,7 @@ def encerrar_sessao(id_locacao):
     dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
     dispositivo.disponivel = True
     db.session.commit()
-    return (redirect(url_for('root')))
+    return (redirect(url_for('listar_locacoes')))
 
 @app.route('/dispositivo/remover/<id_locacao>',methods=['GET','POST'])
 def remover_locacao(id_locacao):
@@ -145,7 +155,7 @@ def remover_locacao(id_locacao):
     dispositivo.disponivel = True
     db.session.delete(locacao)
     db.session.commit()
-    return (redirect(url_for('root')))
+    return (redirect(url_for('listar_locacoes')))
 
 @app.route('/usuario/login',methods=['POST','GET'])
 def login():
@@ -203,7 +213,7 @@ def dispositivo_situacao(nome):
         if dispositivo.disponivel:
             resultado = json_response(situacao="DISPONIVEL")
         else:
-            #Procurar pra quem está emprestada
+            #Procurar pra quem está alugada
             locacao = Locacao.query.filter(Locacao.id_dispositivo==dispositivo.id).order_by(Locacao.id.desc()).first()
             #"Montar" a resposta
             resultado = json_response(situacao="ALUGADA",nome=locacao.nome_pessoa)

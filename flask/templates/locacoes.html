@@ -10,6 +10,7 @@
         <th>Quem alugou o dispositivo</th>
         <th>Dispostivo</th>
         <th>Locação</th>
+        <th>Tempo restante</th>
         <th>Encerramento</th>
         <th>Pago?</th>
         <th>Pagar</th>
@@ -23,14 +24,27 @@
             <td>{{locacao.nome_pessoa}}</td>
             <td>{{locacao.dispositivo.nome}}</td>
             <td>{{locacao.data_locacao.strftime('%d/%m/%Y %H:%M')}}</td>
+            <td>TEMPO RESTANTE</td>
             {% if locacao.data_encerramento is not none %}
                 <td>{{locacao.data_encerramento.strftime('%d/%m/%Y %H:%M')}}</td>
+            {% else %}
+                <td></td>
             {% endif %}
-            {% if locacao.pago is True %}
+            {% if locacao.pago == True %}
                 <td>PAGO</td>
+            {% else %}
+                <td></td>
             {% endif %}
-            <td>PAGAR</td>
-            <td><a href="{{url_for('encerrar_sessao',id_locacao=locacao.id)}}">ENCERRAR</a></td>
+            {% if locacao.pago == False %}
+                <td><a href="{{url_for('pagar_locacao',id_locacao=locacao.id)}}">PAGAR</a></td>
+            {% else %}
+                <td></td>
+            {% endif %}
+            {% if locacao.data_encerramento is none %}
+                <td><a href="{{url_for('encerrar_locacao',id_locacao=locacao.id)}}">ENCERRAR</a></td>
+            {% else %}
+                <td></td>
+            {% endif %}
             <td><a href="{{url_for('remover_locacao',id_locacao=locacao.id)}}">REMOVER</a></td>
         </tr>
     {% endfor %}
