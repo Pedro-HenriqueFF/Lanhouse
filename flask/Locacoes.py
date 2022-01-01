@@ -9,6 +9,6 @@ class Locacao(db.Model):
     nome_pessoa = db.Column(db.String(100),unique=False,nullable=True)
     id_dispositivo = db.Column(db.Integer,db.ForeignKey('dispositivo.id'))
     data_locacao = db.Column(db.DateTime,unique=False,nullable=False)
-    #tempo_restante
+    final_esperado = db.Column(db.DateTime,unique=False,nullable=True)
     data_encerramento = db.Column(db.DateTime,unique=False,nullable=True)
     pago = db.Column(db.Boolean,default=False)

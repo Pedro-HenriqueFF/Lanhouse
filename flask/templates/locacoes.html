@@ -24,7 +24,11 @@
             <td>{{locacao.nome_pessoa}}</td>
             <td>{{locacao.dispositivo.nome}}</td>
             <td>{{locacao.data_locacao.strftime('%d/%m/%Y %H:%M')}}</td>
-            <td>TEMPO RESTANTE</td>
+            {% if locacao.data_encerramento is none %}
+                <td>{{locacao.final_esperado - tempo_atual}}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
             {% if locacao.data_encerramento is not none %}
                 <td>{{locacao.data_encerramento.strftime('%d/%m/%Y %H:%M')}}</td>
             {% else %}

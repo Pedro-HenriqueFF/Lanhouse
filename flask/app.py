@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
 import logging
 import os
-import datetime
+from datetime import datetime, date, time, timedelta
 from formDispositivo import DispositivoForm
 from formUsuario import UsuarioForm
 from formLocacao import LocacaoForm
@@ -110,7 +110,13 @@ def alugar_dispositivo():
         #IMPLEMENTAÇÃO DO CADASTRO DO EMPRÉSTIMO
         nome = request.form['nome']
         dispositivo = int(request.form['dispositivo'])
-        novaLocacao = Locacao(id_usuario=session['usuario'],id_dispositivo=dispositivo,nome_pessoa=nome,data_locacao=datetime.datetime.now())
+        inicio = datetime.now()
+        if(int(request.form['tempo_locacao']) == 1):
+            tempo = timedelta(hours=0,minutes=30)
+        elif(int(request.form['tempo_locacao']) == 2):
+            tempo = timedelta(hours=0,minutes=60)
+        final = inicio + tempo
+        novaLocacao = Locacao(id_usuario=session['usuario'],id_dispositivo=dispositivo,nome_pessoa=nome,data_locacao=inicio,final_esperado=final)
         dispositivoAlterado = Dispositivo.query.get(dispositivo)
         dispositivoAlterado.disponivel = False
         db.session.add(novaLocacao)
@@ -121,7 +127,7 @@ def alugar_dispositivo():
 @app.route('/dispositivo/listar_locacoes')
 def listar_locacoes():
     locacoes = Locacao.query.order_by(Locacao.data_locacao.desc()).all()
-    return(render_template('locacoes.html',locacoes=locacoes))
+    return(render_template('locacoes.html',locacoes=locacoes,tempo_atual=datetime.now()))
 
 @app.route('/dispositivo/pagar/<id_locacao>',methods=['GET','POST'])
 def pagar_locacao(id_locacao):
@@ -139,7 +145,7 @@ def encerrar_locacao(id_locacao):
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
     locacao = Locacao.query.get(id_locacao)
-    locacao.data_encerramento = datetime.datetime.now()
+    locacao.data_encerramento = datetime.now()
     dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
     dispositivo.disponivel = True
     db.session.commit()
