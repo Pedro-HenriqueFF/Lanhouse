@@ -8,3 +8,4 @@ class Usuario(db.Model):
     telefone = db.Column(db.String(20),unique=False,nullable=True)
     senha = db.Column(db.String(80), unique=False, nullable=False)
     locacoes = db.relationship('Locacao',backref='usuario',lazy=True)
+    

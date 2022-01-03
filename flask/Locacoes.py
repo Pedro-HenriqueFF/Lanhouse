@@ -12,3 +12,4 @@ class Locacao(db.Model):
     final_esperado = db.Column(db.DateTime,unique=False,nullable=True)
     data_encerramento = db.Column(db.DateTime,unique=False,nullable=True)
     pago = db.Column(db.Boolean,default=False)
+    

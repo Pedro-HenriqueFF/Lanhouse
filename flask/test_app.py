@@ -64,3 +64,4 @@ def test_8_dispositivo_alugar_get(client):
 def test_9_dispositivo_listar_locacoes(client):
     rv = client.get('/dispositivo/listar_locacoes',follow_redirects=True)
     assert rv.status_code==200
+    
