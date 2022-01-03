@@ -36,25 +36,31 @@ def test_2_login(client):
     rv = login(client,'Master')
     assert b'autenticado com sucesso' in rv.data
 
-
-def test_3_dispositivo_cadastrar_get(client):
-    rv = client.get('/dispositivo/cadastrar',follow_redirects=True)
-    assert b'Nome do dispositivo' in rv.data
-
-def test_4_dispositivo_listar(client):
-    rv = client.get('/dispositivo/listar',follow_redirects=True)
-    assert rv.status_code==200
-
 @pytest.mark.usefixtures('preparacao')
-def test_5_login_errado(client):
+def test_3_login_errado(client):
     rv = login(client,'UsuarioNaoExistente')
     assert b'rio e/ou senha' in rv.data
 
-def test_6_usuario_listar(client):
+def test_4_dispositivo_cadastrar_get(client):
+    rv = client.get('/dispositivo/cadastrar',follow_redirects=True)
+    assert b'Nome do dispositivo' in rv.data
+
+def test_5_dispositivo_listar(client):
+    rv = client.get('/dispositivo/listar',follow_redirects=True)
+    assert rv.status_code==200
+
+def test_6_usuario_cadastrar_get(client):
+    rv = client.get('/usuario/cadastrar',follow_redirects=True)
+    assert b'Nome de usu' in rv.data
+
+def test_7_usuario_listar(client):
     rv = client.get('/usuario/listar',follow_redirects=True)
     assert rv.status_code==200
 
-def test_7_dispositivo_listar_locacoes(client):
+def test_8_dispositivo_alugar_get(client):
+    rv = client.get('/dispositivo/alugar',follow_redirects=True)
+    assert b'Nome de quem pega emprestado' in rv.data
+
+def test_9_dispositivo_listar_locacoes(client):
     rv = client.get('/dispositivo/listar_locacoes',follow_redirects=True)
     assert rv.status_code==200
-

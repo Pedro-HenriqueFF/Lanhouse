@@ -243,16 +243,5 @@ def dispositivo_situacao(nome):
 
     return(resultado)
 
-@app.route('/dispositivo/teste')
-def dispositivo_teste():
-    dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
-    lista_dispositivos = []
-    for dispositivo in dispositivos:
-        linha = {"nome": dispositivo.nome, "disponivel": dispositivo.disponivel}
-        lista_dispositivos.append(linha)
-    resultado = json.dumps([linha for linha in lista_dispositivos])
-    return(resultado)
-
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=80, url_prefix='/app')
-
