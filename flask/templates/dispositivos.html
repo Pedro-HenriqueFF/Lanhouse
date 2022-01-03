@@ -6,13 +6,21 @@
 <tr>
     <th>ID</th>
     <th>Nome</th>
-    <th>Disponível ?</th>
+    <th>Disponível?</th>
+    <th>Remover Dispositivo</th>
 </tr>
-{% for dispostivo in dispositivos %}
+{% for dispositivo in dispositivos %}
     <tr>
-        <td>{{dispostivo.id}}</td>
-        <td>{{dispostivo.nome}}</td>
-        <td>{{dispostivo.disponivel}}</td>
+        {% if dispositivo.disponivel != -1 %}
+            <td>{{dispositivo.id}}</td>
+            <td>{{dispositivo.nome}}</td>
+            {% if dispositivo.disponivel == 0 %}
+                <td>SIM</td>
+            {% elif dispositivo.disponivel == 1 %}
+                <td>NÃO</td>
+            {% endif %}
+            <td><a href="{{url_for('remover_dispositivo',id_dispositivo=dispositivo.id)}}">REMOVER</a></td>
+        {% endif %}
     </tr>
 {% endfor %}
 

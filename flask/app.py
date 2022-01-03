@@ -72,6 +72,19 @@ def listar_dispositivos():
     dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
     return(render_template('dispositivos.html',dispositivos=dispositivos))
 
+@app.route('/dispositivo/remover/<id_dispositivo>',methods=['GET','POST'])
+def remover_dispositivo(id_dispositivo):
+    if session.get('autenticado',False)==False:
+        return (redirect(url_for('login')))  
+    id_dispositivo = int(id_dispositivo)
+    dispositivo = Dispositivo.query.get(id_dispositivo)
+    if dispositivo.disponivel == 0:
+        dispositivo.disponivel = -1
+        db.session.commit()
+    else: 
+        flash(u'Dispositivo sendo usado no momento')
+    return (redirect(url_for('listar_dispositivos')))
+
 @app.route('/usuario/cadastrar',methods=['POST','GET'])
 def cadastrar_usuario():
     if session.get('autenticado',False)==False:
@@ -104,7 +117,7 @@ def alugar_dispositivo():
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
     form = LocacaoForm()
-    dispositivos = Dispositivo.query.filter(Dispositivo.disponivel==True).order_by(Dispositivo.nome).all()
+    dispositivos = Dispositivo.query.filter(Dispositivo.disponivel==0).order_by(Dispositivo.nome).all()
     form.dispositivo.choices = [(d.id,d.nome) for d in dispositivos]
     if form.validate_on_submit():
         #IMPLEMENTAÇÃO DO CADASTRO DO EMPRÉSTIMO
@@ -118,7 +131,7 @@ def alugar_dispositivo():
         final = inicio + tempo
         novaLocacao = Locacao(id_usuario=session['usuario'],id_dispositivo=dispositivo,nome_pessoa=nome,data_locacao=inicio,final_esperado=final)
         dispositivoAlterado = Dispositivo.query.get(dispositivo)
-        dispositivoAlterado.disponivel = False
+        dispositivoAlterado.disponivel = 1
         db.session.add(novaLocacao)
         db.session.commit()
         return(redirect(url_for('root')))
@@ -139,7 +152,7 @@ def pagar_locacao(id_locacao):
     db.session.commit()
     return (redirect(url_for('listar_locacoes')))
 
-@app.route('/dispositivo/encerrar/<id_locacao>',methods=['GET','POST'])
+@app.route('/dispositivo/encerrar_locacao/<id_locacao>',methods=['GET','POST'])
 def encerrar_locacao(id_locacao):
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
@@ -147,18 +160,18 @@ def encerrar_locacao(id_locacao):
     locacao = Locacao.query.get(id_locacao)
     locacao.data_encerramento = datetime.now()
     dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
-    dispositivo.disponivel = True
+    dispositivo.disponivel = 0
     db.session.commit()
     return (redirect(url_for('listar_locacoes')))
 
-@app.route('/dispositivo/remover/<id_locacao>',methods=['GET','POST'])
+@app.route('/dispositivo/remover_locacao/<id_locacao>',methods=['GET','POST'])
 def remover_locacao(id_locacao):
     if session.get('autenticado',False)==False:
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
     locacao = Locacao.query.get(id_locacao)
     dispositivo = Dispositivo.query.get(locacao.id_dispositivo)
-    dispositivo.disponivel = True
+    dispositivo.disponivel = 0
     db.session.delete(locacao)
     db.session.commit()
     return (redirect(url_for('listar_locacoes')))
@@ -216,13 +229,15 @@ def listar_dispositivos_json():
 def dispositivo_situacao(nome):
     dispositivo = Dispositivo.query.filter(Dispositivo.nome==nome).first()
     if dispositivo is not None:
-        if dispositivo.disponivel:
+        if dispositivo.disponivel == 0:
             resultado = json_response(situacao="DISPONIVEL")
-        else:
+        elif dispositivo.disponivel == 1:
             #Procurar pra quem está alugada
             locacao = Locacao.query.filter(Locacao.id_dispositivo==dispositivo.id).order_by(Locacao.id.desc()).first()
             #"Montar" a resposta
             resultado = json_response(situacao="ALUGADA",nome=locacao.nome_pessoa)
+        else:
+            resultado = json_response(situacao="DISPOSITIVO INEXISTENTE")
     else:
         resultado = json_response(situacao="DISPOSITIVO INEXISTENTE")
 
