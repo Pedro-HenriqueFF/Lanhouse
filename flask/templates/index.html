@@ -4,7 +4,7 @@
 
 <nav class="navbar navbar-light bg-light fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Offcanvas navbar</a>
+    <a class="navbar-brand" href="">Nome da Lanhouse</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -29,30 +29,16 @@
               <li><a class="dropdown-item" href="{{url_for('cadastrar_usuario')}}">CADASTRAR USUÁRIO</a></li>
               <li><a class="dropdown-item" href="{{url_for('cadastrar_dispositivo')}}">CADASTRAR DISPOSITIVO</a></li>
         </ul> 
+        </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Lista
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
+              <li><a class="dropdown-item" href="{{url_for('listar_usuarios')}}">USUÁRIOs</a></li>
+              <li><a class="dropdown-item" href="{{url_for('listar_locacoes')}}">LOCAÇÕES</a></li>
+              <li><a class="dropdown-item" href="{{url_for('listar_dispositivos')}}">Dispositivos</a></li>
+        </ul> 
 </nav>
-
-<p>
-  <a href="{{url_for('cadastrar_dispositivo')}}">CADASTRAR DISPOSITIVO</a>
-</p>
-
-<p>
-  <a href="{{url_for('listar_dispositivos')}}">LISTAR DISPOSITIVOS</a>
-</p>
-
-<p>
-  <a href="{{url_for('cadastrar_usuario')}}">CADASTRAR USUÁRIO</a>
-</p>
-
-<p>
-  <a href="{{url_for('listar_usuarios')}}">LISTAR USUÁRIOS</a>
-</p>
-
-<p>
-  <a href="{{url_for('alugar_dispositivo')}}">ALUGAR DISPOSITIVO</a>
-</p>
-
-<p>
-  <a href="{{url_for('listar_locacoes')}}">LISTAR LOCAÇÕES</a>
-</p>
 
 {% endblock %}
