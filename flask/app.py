@@ -189,6 +189,7 @@ def login():
         if (len(linha)>0): #"Anota" na sessão que o usuário está autenticado
             session['autenticado'] = True
             session['usuario'] = linha[0].id
+            session['nome'] = linha[0].nome
             flash(u'Usuário autenticado com sucesso!')
             resp = make_response(redirect(url_for('root')))
             if 'contador' in request.cookies:
