@@ -1,58 +1,59 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
+<div class="table-responsive"></div>
+    <table class="table table-hover table-striped">
 
-<table class="table table-dark table-striped">
-
-    <tr>
-        <th>ID da locação</th>
-        <th>Responsável</th>
-        <th>Quem alugou o dispositivo</th>
-        <th>Dispositivo</th>
-        <th>Locação</th>
-        <th>Tempo restante</th>
-        <th>Encerramento</th>
-        <th>Pago?</th>
-        <th>Pagar</th>
-        <th>Encerrar Sessão</th>
-        <th>Remover Locação</th>
-    </tr>
-    {% for locacao in locacoes %}
         <tr>
-            <td>{{locacao.id}}</td>
-            <td>{{locacao.usuario.nome}}</td>
-            <td>{{locacao.nome_pessoa}}</td>
-            <td>{{locacao.dispositivo.nome}}</td>
-            <td>{{locacao.data_locacao.strftime('%d/%m/%Y %H:%M')}}</td>
-            {% if locacao.data_encerramento is none %}
-                <td>{{locacao.final_esperado - tempo_atual}}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
-            {% if locacao.data_encerramento is not none %}
-                <td>{{locacao.data_encerramento.strftime('%d/%m/%Y %H:%M')}}</td>
-            {% else %}
-                <td></td>
-            {% endif %}
-            {% if locacao.pago == True %}
-                <td>PAGO</td>
-            {% else %}
-                <td></td>
-            {% endif %}
-            {% if locacao.pago == False %}
-                <td><a href="{{url_for('pagar_locacao',id_locacao=locacao.id)}}">PAGAR</a></td>
-            {% else %}
-                <td></td>
-            {% endif %}
-            {% if locacao.data_encerramento is none %}
-                <td><a href="{{url_for('encerrar_locacao',id_locacao=locacao.id)}}">ENCERRAR</a></td>
-            {% else %}
-                <td></td>
-            {% endif %}
-            <td><a href="{{url_for('remover_locacao',id_locacao=locacao.id)}}">REMOVER</a></td>
+            <th>ID da locação</th>
+            <th>Responsável</th>
+            <th>Quem alugou o dispositivo</th>
+            <th>Dispositivo</th>
+            <th>Locação</th>
+            <th>Tempo restante</th>
+            <th>Encerramento</th>
+            <th>Pago?</th>
+            <th>Pagar</th>
+            <th>Encerrar Sessão</th>
+            <th>Remover Locação</th>
         </tr>
-    {% endfor %}
+        {% for locacao in locacoes %}
+            <tr>
+                <td>{{locacao.id}}</td>
+                <td>{{locacao.usuario.nome}}</td>
+                <td>{{locacao.nome_pessoa}}</td>
+                <td>{{locacao.dispositivo.nome}}</td>
+                <td>{{locacao.data_locacao.strftime('%d/%m/%Y %H:%M')}}</td>
+                {% if locacao.data_encerramento is none %}
+                   <td>{{locacao.final_esperado - tempo_atual}}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if locacao.data_encerramento is not none %}
+                    <td>{{locacao.data_encerramento.strftime('%d/%m/%Y %H:%M')}}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if locacao.pago == True %}
+                    <td>PAGO</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if locacao.pago == False %}
+                    <td><a href="{{url_for('pagar_locacao',id_locacao=locacao.id)}}">PAGAR</a></td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                {% if locacao.data_encerramento is none %}
+                    <td><a href="{{url_for('encerrar_locacao',id_locacao=locacao.id)}}">ENCERRAR</a></td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                <td><a href="{{url_for('remover_locacao',id_locacao=locacao.id)}}">REMOVER</a></td>
+                </tr>
+        {% endfor %}
 
-</table>
+    </table>
+</div>
 
 {% endblock %}

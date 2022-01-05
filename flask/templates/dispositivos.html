@@ -2,7 +2,7 @@
 
 {% block conteudo %}
 
-<table class="table table-info table-striped table-hover ">
+<table class="table table-warning table-striped table-hover ">
 <tr>
     <th>ID</th>
     <th>Nome</th>
@@ -19,7 +19,7 @@
             {% elif dispositivo.disponivel == 1 %}
                 <td>NÃO</td>
             {% endif %}
-            <td><button type="button" class="btn btn-danger"><a href="{{url_for('remover_dispositivo',id_dispositivo=dispositivo.id)}}">REMOVER</button></a></td>
+            <td><a class="btn btn-primary" href="{{url_for('remover_dispositivo',id_dispositivo=dispositivo.id)}}" role="button">Remover</a>
         {% endif %}
     </tr>
 {% endfor %}
