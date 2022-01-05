@@ -31,7 +31,7 @@
         <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
           {% if session.get('autenticado',False)!=False %}
           <li class="nav-item">
-            <span class="navbar-brand mb-0 h1"> Bem-vindo(a) {{session['nome']}}</span>
+            <span class="navbar-brand mb-0 h4"> Bem-vindo(a) {{session['nome']}}</span>
           </li>
           {% endif %}
           <li class="nav-item">
