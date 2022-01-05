@@ -7,4 +7,4 @@ class LocacaoForm(FlaskForm):
     nome = StringField('Nome de quem pega emprestado: ', validators=[DataRequired()])
     dispositivo = SelectField('Dispositivo',coerce=int,default=None)
     tempo_locacao = SelectField(u'Tempo de Locação',choices=[('1', '30 minutos'), ('2', '1 hora')],coerce=int,default=None)
-    enviar = SubmitField('CADASTRAR')
+    enviar = SubmitField('LOCAR')
