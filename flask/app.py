@@ -50,12 +50,14 @@ def inicializar_bd():
 @app.route('/')
 def root():
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     return (render_template('index.html'))
         
 @app.route('/dispositivo/cadastrar',methods=['POST','GET'])
 def cadastrar_dispositivo():
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     form = DispositivoForm()
     if form.validate_on_submit():
@@ -69,12 +71,16 @@ def cadastrar_dispositivo():
 
 @app.route('/dispositivo/listar')
 def listar_dispositivos():
+    if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
+        return (redirect(url_for('login')))
     dispositivos = Dispositivo.query.order_by(Dispositivo.nome).all()
     return(render_template('dispositivos.html',dispositivos=dispositivos))
 
 @app.route('/dispositivo/remover/<id_dispositivo>',methods=['GET','POST'])
 def remover_dispositivo(id_dispositivo):
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))  
     id_dispositivo = int(id_dispositivo)
     dispositivo = Dispositivo.query.get(id_dispositivo)
@@ -88,6 +94,7 @@ def remover_dispositivo(id_dispositivo):
 @app.route('/usuario/cadastrar',methods=['POST','GET'])
 def cadastrar_usuario():
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     form = UsuarioForm()
     if form.validate_on_submit():
@@ -108,6 +115,7 @@ def cadastrar_usuario():
 @app.route('/usuario/listar')
 def listar_usuarios():
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     usuarios = Usuario.query.order_by(Usuario.nome).all()
     return(render_template('usuarios.html',usuarios=usuarios))
@@ -115,6 +123,7 @@ def listar_usuarios():
 @app.route('/dispositivo/alugar',methods=['POST','GET'])
 def alugar_dispositivo():
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     form = LocacaoForm()
     dispositivos = Dispositivo.query.filter(Dispositivo.disponivel==0).order_by(Dispositivo.nome).all()
@@ -139,12 +148,16 @@ def alugar_dispositivo():
 
 @app.route('/dispositivo/listar_locacoes')
 def listar_locacoes():
+    if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
+        return (redirect(url_for('login')))
     locacoes = Locacao.query.order_by(Locacao.data_locacao.desc()).all()
     return(render_template('locacoes.html',locacoes=locacoes,tempo_atual=datetime.now()))
 
 @app.route('/dispositivo/pagar/<id_locacao>',methods=['GET','POST'])
 def pagar_locacao(id_locacao):
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
     locacao = Locacao.query.get(id_locacao)
@@ -155,6 +168,7 @@ def pagar_locacao(id_locacao):
 @app.route('/dispositivo/encerrar_locacao/<id_locacao>',methods=['GET','POST'])
 def encerrar_locacao(id_locacao):
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
     locacao = Locacao.query.get(id_locacao)
@@ -167,6 +181,7 @@ def encerrar_locacao(id_locacao):
 @app.route('/dispositivo/remover_locacao/<id_locacao>',methods=['GET','POST'])
 def remover_locacao(id_locacao):
     if session.get('autenticado',False)==False:
+        flash(u'Se autentique para poder acessar as funções do site!')
         return (redirect(url_for('login')))
     id_locacao = int(id_locacao)
     locacao = Locacao.query.get(id_locacao)
