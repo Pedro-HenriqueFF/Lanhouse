@@ -10,4 +10,10 @@ docker-compose up -d
 
 Abrir no navegador: localhost:4005
 
+Usuário padrão para logar:
+
+Usuário: Master
+
+Senha: 123456
+
 ```
